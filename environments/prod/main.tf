@@ -42,3 +42,45 @@ module "iam" {
   project_name = "aws-prod-infra"
   environment  = "prod"
 }
+
+# S3 buckets for Terraform state and ALB logs
+
+module "s3" {
+  source = "../../modules/s3"
+
+  project_name = "aws-prod-infra"
+  environment  = "prod"
+}
+
+# Application Load Balancer
+module "alb" {
+  source = "../../modules/alb"
+
+  project_name = "aws-prod-infra"
+  environment  = "prod"
+
+  vpc_id            = module.vpc.vpc_id
+  public_subnet_ids = module.vpc.public_subnet_ids
+
+  alb_sg_id      = module.security_groups.alb_sg_id
+  alb_logs_bucket = module.s3.alb_logs_bucket
+}
+
+# EC2 instances in Auto Scaling Group
+
+module "ec2" {
+  source = "../../modules/ec2"
+
+  project_name = "aws-prod-infra"
+  environment  = "prod"
+
+  private_subnet_ids = module.vpc.private_subnet_ids
+
+  ec2_sg_id = module.security_groups.ec2_sg_id
+
+  instance_profile_name = module.iam.instance_profile_name
+
+  target_group_arn = module.alb.target_group_arn
+
+  instance_type = "t3.micro"
+}
