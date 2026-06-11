@@ -3,9 +3,7 @@ variable "allowed_ssh_cidr" {
   type        = string
 }
 
-############################################
 # General
-############################################
 
 variable "project_name" {
   description = "Project name"
@@ -22,9 +20,7 @@ variable "aws_region" {
   type        = string
 }
 
-############################################
 # Networking
-############################################
 
 variable "vpc_cidr" {
   description = "VPC CIDR Block"
@@ -46,9 +42,7 @@ variable "private_subnet_cidrs" {
   type        = list(string)
 }
 
-############################################
 # Security
-############################################
 
 variable "allowed_ssh_cidr" {
   description = "Allowed SSH CIDR"
@@ -56,9 +50,7 @@ variable "allowed_ssh_cidr" {
   default     = "0.0.0.0/32"
 }
 
-############################################
 # EC2
-############################################
 
 variable "instance_type" {
   description = "EC2 instance type"
@@ -66,9 +58,7 @@ variable "instance_type" {
   default     = "t3.micro"
 }
 
-############################################
 # Database
-############################################
 
 variable "db_name" {
   description = "Database name"
@@ -80,9 +70,7 @@ variable "db_username" {
   type        = string
 }
 
-############################################
 # Monitoring
-############################################
 
 variable "alert_email" {
   description = "Email address for SNS alerts"
