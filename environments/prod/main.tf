@@ -84,3 +84,44 @@ module "ec2" {
 
   instance_type = "t3.micro"
 }
+
+# RDS instance
+module "rds" {
+  source = "../../modules/rds"
+
+  project_name = "aws-prod-infra"
+  environment  = "prod"
+
+  private_subnet_ids = module.vpc.private_subnet_ids
+
+  rds_sg_id = module.security_groups.rds_sg_id
+
+  db_name     = "appdb"
+  db_username = "dbadmin"
+}
+
+# SNS topic for alerts
+module "sns" {
+  source = "../../modules/sns"
+
+  project_name = "aws-prod-infra"
+  environment  = "prod"
+
+  alert_email = "sadiqabdulrahman00880@gmail.com"
+}
+
+# CloudWatch Alarms for EC2, ALB, and RDS
+module "cloudwatch" {
+  source = "../../modules/cloudwatch"
+
+  project_name = "aws-prod-infra"
+  environment  = "prod"
+
+  sns_topic_arn = module.sns.sns_topic_arn
+
+  alb_arn_suffix = module.alb.alb_arn_suffix
+
+  db_identifier = module.rds.db_identifier
+
+  asg_name = module.ec2.asg_name
+}
