@@ -1,45 +1,5 @@
 data "aws_caller_identity" "current" {}
 
-resource "aws_s3_bucket_policy" "alb_logs" {
-  bucket = aws_s3_bucket.alb_logs.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid    = "AWSLogDeliveryAclCheck"
-        Effect = "Allow"
-
-        Principal = {
-          Service = "logdelivery.elasticloadbalancing.amazonaws.com"
-        }
-
-        Action = "s3:GetBucketAcl"
-
-        Resource = aws_s3_bucket.alb_logs.arn
-      },
-      {
-        Sid    = "AWSLogDeliveryWrite"
-        Effect = "Allow"
-
-        Principal = {
-          Service = "logdelivery.elasticloadbalancing.amazonaws.com"
-        }
-
-        Action = "s3:PutObject"
-
-        Resource = "${aws_s3_bucket.alb_logs.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
-
-        Condition = {
-          StringEquals = {
-            "s3:x-amz-acl" = "bucket-owner-full-control"
-          }
-        }
-      }
-    ]
-  })
-}
-
 # ALB logs bucket
 
 resource "aws_s3_bucket" "alb_logs" {
@@ -91,6 +51,50 @@ resource "aws_s3_bucket_ownership_controls" "alb_logs" {
     object_ownership = "BucketOwnerPreferred"
   }
 }
+
+
+resource "aws_s3_bucket_policy" "alb_logs" {
+  bucket = aws_s3_bucket.alb_logs.id
+
+  depends_on = [ aws_s3_bucket_ownership_controls.alb_logs ]
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AWSLogDeliveryAclCheck"
+        Effect = "Allow"
+
+        Principal = {
+          Service = "logdelivery.elasticloadbalancing.amazonaws.com"
+        }
+
+        Action = "s3:GetBucketAcl"
+
+        Resource = aws_s3_bucket.alb_logs.arn
+      },
+      {
+        Sid    = "AWSLogDeliveryWrite"
+        Effect = "Allow"
+
+        Principal = {
+          Service = "logdelivery.elasticloadbalancing.amazonaws.com"
+        }
+
+        Action = "s3:PutObject"
+
+        Resource = "${aws_s3_bucket.alb_logs.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+
+        Condition = {
+          StringEquals = {
+            "s3:x-amz-acl" = "bucket-owner-full-control"
+          }
+        }
+      }
+    ]
+  })
+}
+
 # lifecycle rules for ALB logs bucket
 
 resource "aws_s3_bucket_lifecycle_configuration" "alb_logs" {
@@ -110,3 +114,4 @@ resource "aws_s3_bucket_lifecycle_configuration" "alb_logs" {
     }
   }
 }
+

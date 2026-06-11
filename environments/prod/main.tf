@@ -64,6 +64,8 @@ module "alb" {
 
   alb_sg_id      = module.security_groups.alb_sg_id
   alb_logs_bucket = module.s3.alb_logs_bucket
+
+  depends_on = [ module.s3 ]
 }
 
 # EC2 instances in Auto Scaling Group
