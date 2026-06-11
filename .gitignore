@@ -1,0 +1,59 @@
+# Ignore Terraform local state, caches, and sensitive files
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash_logs/
+# Local override and generated plans
+override.tf
+override.tf.json
+*.tfplan
+# Ignore variable files that may contain secrets (allow examples)
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+!*.tfvars.sample
+# CLI and plugin dirs
+.terraform.d/
+.terraform/plugins/
+terraform.rc
+.terraformrc
+
+# Backup and swap files
+*.backup
+*.swp
+
+# Lock file (recommended to commit) - do not ignore
+# .terraform.lock.hcl
+
+# Common sensitive files
+*.pem
+*.key
+id_rsa
+id_rsa.pub
+
+# Editor/IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python virtualenvs and caches
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Logs
+*.log
+
+# Misc
+*.env
+*.local

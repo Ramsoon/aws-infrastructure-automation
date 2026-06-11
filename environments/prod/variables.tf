@@ -1,7 +1,3 @@
-variable "allowed_ssh_cidr" {
-  description = "CIDR allowed to SSH"
-  type        = string
-}
 
 # General
 

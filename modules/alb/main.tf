@@ -16,6 +16,8 @@ resource "aws_lb" "this" {
     enabled = true
   }
 
+  # depends_on = [ aws_s3_bucket_policy.alb_logs ]
+
   tags = {
     Name = "${var.project_name}-${var.environment}-alb"
   }
