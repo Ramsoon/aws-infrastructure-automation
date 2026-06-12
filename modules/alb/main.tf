@@ -10,11 +10,11 @@ resource "aws_lb" "this" {
 
   enable_deletion_protection = false
 # temporal
-  # access_logs {
-  #   bucket  = var.alb_logs_bucket
-  #   prefix  = "alb"
-  #   enabled = true
-  # }
+  access_logs {
+    bucket  = var.alb_logs_bucket
+    #prefix  = "alb"
+    enabled = true
+  }
 
   # depends_on = [ aws_s3_bucket_policy.alb_logs ]
 
